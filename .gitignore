@@ -17,6 +17,7 @@ dist/
 .env
 .env.*
 !.env.example
+**/appsettings.Secrets.json
 
 # IDE / OS
 .vscode/
