@@ -1,0 +1,21 @@
+PersonalFinanceApp/
+│
+├── src/
+│   ├── PersonalFinanceApp.Api/           # ASP.NET Core Web API (Controllers, Filters, Swagger)
+│   ├── PersonalFinanceApp.Application/   # Application Layer (CQRS, MediatR, DTOs, Services)
+│   ├── PersonalFinanceApp.Domain/        # Domain Layer (Entities, ValueObjects, Domain Services)
+│   ├── PersonalFinanceApp.Infrastructure/# Data Access (EF Core, Repositories, Migrations, 3rd-party integrations)
+│   ├── PersonalFinanceApp.BackgroundJobs/# Background jobs (Hangfire/Quartz.NET)
+│   ├── PersonalFinanceApp.Notifications/ # Real-time notifications (SignalR/WebSockets)
+│   └── PersonalFinanceApp.ML/            # Machine Learning (ML.NET, analytics, forecasting)
+│
+├── tests/
+│   ├── PersonalFinanceApp.UnitTests/
+│   ├── PersonalFinanceApp.IntegrationTests/
+│   └── PersonalFinanceApp.E2ETests/
+│
+├── docs/                                # Documentation, API references, onboarding guides
+├── scripts/                             # Database scripts, migrations, seed data
+├── .github/                             # Workflows, CI/CD, issue templates
+├── docker/                              # Dockerfiles, compose, deployment scripts
+└── README.md

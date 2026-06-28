@@ -1,0 +1,397 @@
+erDiagram
+    %% Core User Relationships
+    User ||--o{ BankAccount : owns
+    User ||--o{ Budget : creates
+    User ||--o{ Investment : has
+    User ||--o{ FinancialGoal : sets
+    User ||--o{ Report : generates
+    User ||--o{ Notification : receives
+    User ||--|| UserProfile : has
+    User ||--o{ SpendingPattern : analyzed_for
+    User ||--o{ Portfolio : manages
+    User ||--o{ RecurringTransaction : has
+    User ||--o{ BillReminder : sets
+    
+    %% Bank Account Relationships
+    BankAccount ||--o{ Transaction : contains
+    BankAccount ||--|| PlaidAccount : links_to
+    BankAccount ||--|| Currency : uses
+    
+    %% Transaction Relationships
+    Transaction ||--|| Category : belongs_to
+    Transaction ||--o{ TransactionTag : has
+    Transaction ||--|| TransactionStatus : has_status
+    Transaction ||--o{ RecurringTransaction : can_be_recurring
+    
+    %% Budget Relationships
+    Budget ||--o{ BudgetCategory : includes
+    Budget ||--|| BudgetPeriod : uses_period
+    BudgetCategory ||--|| Category : references
+    
+    %% Investment Relationships
+    Investment ||--|| InvestmentType : of_type
+    Investment ||--o{ InvestmentTransaction : has
+    Investment ||--o{ Portfolio : belongs_to
+    Investment ||--o{ StockPrice : tracks_via_symbol
+    
+    %% Category Relationships
+    Category ||--o{ SpendingPattern : analyzed_in
+    Category ||--o{ Category : has_parent
+    Category ||--o{ TaxCategory : can_have_tax_info
+    
+    %% Portfolio Relationships
+    Portfolio ||--o{ Investment : contains
+    
+    %% Stock Price Relationships
+    StockPrice ||--o{ Investment : tracks_for
+    
+    %% Bill Reminder Relationships
+    BillReminder ||--|| Category : for_category
+    BillReminder ||--|| Currency : in_currency
+    
+    %% Notification Relationships
+    Notification ||--|| NotificationType : of_type
+    
+    %% Report Relationships
+    Report ||--|| Currency : in_currency
+    
+    User {
+        int Id PK
+        string Email UK
+        string PasswordHash
+        string FirstName
+        string LastName
+        datetime CreatedAt
+        datetime UpdatedAt
+        bool IsActive
+        bool IsDeleted
+        string RefreshToken
+        datetime RefreshTokenExpiry
+    }
+    
+    UserProfile {
+        int Id PK
+        int UserId FK
+        string ProfilePicture
+        string PhoneNumber
+        string Address
+        string City
+        string State
+        string ZipCode
+        string Country
+        decimal AnnualIncome
+        datetime DateOfBirth
+        string RiskTolerance
+        string FinancialExperience
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    
+    BankAccount {
+        int Id PK
+        int UserId FK
+        int CurrencyId FK
+        string AccountName
+        string AccountType
+        string EncryptedAccountNumber
+        string EncryptedRoutingNumber
+        decimal Balance
+        string BankName
+        bool IsActive
+        bool IsDeleted
+        datetime CreatedAt
+        datetime UpdatedAt
+        string PlaidAccountId
+    }
+    
+    Currency {
+        int Id PK
+        string Code UK
+        string Name
+        string Symbol
+        decimal ExchangeRate
+        bool IsDefault
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    
+    PlaidAccount {
+        int Id PK
+        int BankAccountId FK
+        string PlaidItemId
+        string EncryptedPlaidAccessToken
+        string PlaidAccountId
+        string InstitutionId
+        string InstitutionName
+        datetime LastSync
+        bool IsConnected
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    
+    Transaction {
+        int Id PK
+        int BankAccountId FK
+        int CategoryId FK
+        int TransactionStatusId FK
+        string TransactionId
+        decimal Amount
+        string Description
+        datetime TransactionDate
+        datetime CreatedAt
+        datetime UpdatedAt
+        string MerchantName
+        string TransactionType
+        bool IsRecurring
+        string Notes
+        bool IsExcludedFromBudget
+        bool IsDeleted
+    }
+    
+    TransactionStatus {
+        int Id PK
+        string Name UK
+        string Description
+        string Color
+        bool IsActive
+    }
+    
+    Category {
+        int Id PK
+        string Name
+        string Description
+        string Color
+        string Icon
+        bool IsDefault
+        bool IsIncome
+        int ParentCategoryId FK
+        bool IsActive
+        bool IsDeleted
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    
+    TaxCategory {
+        int Id PK
+        int CategoryId FK
+        string TaxCode
+        decimal TaxRate
+        bool IsDeductible
+        string Description
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    
+    TransactionTag {
+        int Id PK
+        int TransactionId FK
+        string TagName
+        datetime CreatedAt
+    }
+    
+    Budget {
+        int Id PK
+        int UserId FK
+        int CurrencyId FK
+        string Name
+        decimal TotalAmount
+        int BudgetPeriodId FK
+        datetime StartDate
+        datetime EndDate
+        bool IsActive
+        bool IsDeleted
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    
+    BudgetPeriod {
+        int Id PK
+        string Name UK
+        string Description
+        int DaysInPeriod
+        bool IsActive
+    }
+    
+    BudgetCategory {
+        int Id PK
+        int BudgetId FK
+        int CategoryId FK
+        decimal AllocatedAmount
+        decimal SpentAmount
+        decimal RemainingAmount
+        bool IsOverBudget
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    
+    Portfolio {
+        int Id PK
+        int UserId FK
+        string Name
+        string Description
+        decimal TotalValue
+        decimal TotalReturn
+        decimal TotalReturnPercent
+        bool IsActive
+        bool IsDeleted
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    
+    Investment {
+        int Id PK
+        int UserId FK
+        int PortfolioId FK
+        int InvestmentTypeId FK
+        string Symbol
+        string Name
+        decimal Quantity
+        decimal PurchasePrice
+        datetime PurchaseDate
+        decimal CurrentPrice
+        decimal CurrentValue
+        decimal TotalReturn
+        decimal DayChange
+        decimal DayChangePercent
+        string AccountNumber
+        string Broker
+        bool IsActive
+        bool IsDeleted
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    
+    InvestmentType {
+        int Id PK
+        string Name UK
+        string Description
+        string Category
+        bool IsActive
+        datetime CreatedAt
+    }
+    
+    InvestmentTransaction {
+        int Id PK
+        int InvestmentId FK
+        string TransactionType
+        decimal Quantity
+        decimal Price
+        decimal Fees
+        datetime TransactionDate
+        string Notes
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    
+    StockPrice {
+        int Id PK
+        string Symbol
+        decimal OpenPrice
+        decimal HighPrice
+        decimal LowPrice
+        decimal ClosePrice
+        decimal Volume
+        datetime PriceDate
+        datetime CreatedAt
+    }
+    
+    SpendingPattern {
+        int Id PK
+        int UserId FK
+        int CategoryId FK
+        decimal AverageAmount
+        string Frequency
+        datetime PredictedNextDate
+        decimal Confidence
+        datetime AnalysisDate
+        string PatternType
+        bool IsActive
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    
+    RecurringTransaction {
+        int Id PK
+        int UserId FK
+        int CategoryId FK
+        int BankAccountId FK
+        string Description
+        decimal Amount
+        string Frequency
+        datetime NextDueDate
+        datetime LastProcessedDate
+        bool IsActive
+        bool IsDeleted
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    
+    BillReminder {
+        int Id PK
+        int UserId FK
+        int CategoryId FK
+        int CurrencyId FK
+        string BillName
+        decimal Amount
+        datetime DueDate
+        string Frequency
+        bool IsPaid
+        string Notes
+        bool IsActive
+        bool IsDeleted
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    
+    FinancialGoal {
+        int Id PK
+        int UserId FK
+        string Name
+        string Description
+        decimal TargetAmount
+        decimal CurrentAmount
+        datetime TargetDate
+        string GoalType
+        bool IsCompleted
+        bool IsDeleted
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    
+    Notification {
+        int Id PK
+        int UserId FK
+        int NotificationTypeId FK
+        string Title
+        string Message
+        bool IsRead
+        datetime CreatedAt
+        string ActionUrl
+        string Priority
+        bool IsDeleted
+    }
+    
+    NotificationType {
+        int Id PK
+        string Name UK
+        string Description
+        string Icon
+        bool IsActive
+    }
+    
+    Report {
+        int Id PK
+        int UserId FK
+        int CurrencyId FK
+        string ReportType
+        string ReportName
+        string FilePath
+        datetime GeneratedAt
+        datetime StartDate
+        datetime EndDate
+        string Parameters
+        string Status
+        bool IsDeleted
+        datetime CreatedAt
+        datetime UpdatedAt
+    }

@@ -1,0 +1,10 @@
+**/.git
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/.vs/
+**/Logs/
+**/.playwright/
+stitch_finflow_main_dashboard/
+assets/

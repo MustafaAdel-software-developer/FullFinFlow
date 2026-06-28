@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: finflow-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ConnectionStrings__Db
+        sync: false
+      - key: JwtSettings__SecretKey
+        generateValue: true
+      - key: JwtSettings__Issuer
+        value: finflow.app
+      - key: JwtSettings__Audience
+        value: finflow.app
+      - key: Cors__AllowedOrigins__0
+        sync: false
